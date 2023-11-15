@@ -64,4 +64,40 @@ public class ArrayUtils {
             dest[j] = src[j];
         }
     }
+
+    public static <T> void rotate(T[] array, int amount) {
+        T[] copy = array.clone();
+        for (int i = 0; i < array.length; i++) {
+            int newPosition = (i + amount) % array.length;
+            array[newPosition < 0 ? newPosition + array.length : newPosition] = copy[i];
+        }
+    }
+
+    public static <T> T[] setUnion(T[] a1, T[] a2) {
+        T[] result = (T[]) Array.newInstance(a1.getClass(), a1.length + a2.length);
+        System.arraycopy(a1, 0, result, 0, a1.length);
+        System.arraycopy(a2, 0, result, a1.length, a2.length);
+        return result;
+    }
+
+    public static <T> T[] setCut(T[] a1, T[] a2) {
+        T[] result = (T[]) Array.newInstance(a1.getClass(), MathUtils.min(a1.length, a2.length));
+        for (int i = 0, j = 0; i < a1.length; i++) {
+            for (int k = 0; k < a2.length; k++) {
+                if (a1[i] == a2[j] && indexOf(result, a1[i]) != -1) {
+                    result[j++] = a1[i];
+                    break;
+                }
+            }
+        }
+        return removeValues(result, null);
+    }
+
+    private static <T> int indexOf(T[] a, T searchItem) {
+        for (int i = 0; i < a.length; i++) {
+            if (a[i].equals(searchItem)) return i;
+        }
+        return -1;
+    }
+
 }
